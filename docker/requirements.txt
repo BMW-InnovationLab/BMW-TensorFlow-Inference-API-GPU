@@ -1,0 +1,9 @@
+aiofiles
+fastapi
+jsonschema
+numpy
+Pillow
+pytest
+python-multipart
+tensorflow==1.13.1
+uvicorn
