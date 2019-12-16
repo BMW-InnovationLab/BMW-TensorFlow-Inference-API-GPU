@@ -73,7 +73,7 @@ The <docker_host_port> can be any unique port of your choice.
 
 The API file will be run automatically, and the service will listen to http requests on the chosen port.
 
-NV_GPU defines on which GPU you want the API to run. If you want the API to run on multiple GPUs just enter multiple numbers seperated by a comma: (NV_GPU=0,1 for example)
+NV_GPU defines on which GPU you want the API to run. If you want the API to run on multiple GPUs just enter multiple numbers separated by a comma: (NV_GPU=0,1 for example)
 
 ## API Endpoints
 
