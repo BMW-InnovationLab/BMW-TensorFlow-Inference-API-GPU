@@ -40,4 +40,6 @@ ENV LANG en_US.UTF-8
 
 WORKDIR /main
 
+EXPOSE 4343
+
 CMD ["uvicorn", "start:app", "--host", "0.0.0.0", "--port", "4343"]
