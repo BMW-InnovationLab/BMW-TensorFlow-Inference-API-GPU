@@ -1,6 +1,6 @@
 import os
 import logging
-from datetime import datetime, date
+from datetime import datetime
 from inference.base_error import AbstractError
 
 
@@ -31,7 +31,7 @@ class Error(AbstractError):
         :return:
         """
         self.date = datetime.now().strftime('%Y-%m-%d')
-        file_path = 'tensorflow_inference_engine_' + self.date + '.log'
+        file_path = self.date + '.log'
         if file_path not in os.listdir('logs'):
             self.logger.removeHandler(self.handler)
             self.handler = logging.FileHandler('logs/' + file_path)
@@ -39,7 +39,7 @@ class Error(AbstractError):
             self.handler.setFormatter(logging.Formatter("%(levelname)s;%(asctime)s;%(message)s"))
             self.logger.addHandler(self.handler)
         oldest_log_file = os.listdir('logs')[0]
-        oldest_date = oldest_log_file.split("_")[3].split('.')[0]
+        oldest_date = oldest_log_file.split('.')[0]
         a = datetime.strptime(datetime.now().strftime('%Y-%m-%d'), '%Y-%m-%d')
         b = datetime.strptime(oldest_date, '%Y-%m-%d')
         delta = a - b

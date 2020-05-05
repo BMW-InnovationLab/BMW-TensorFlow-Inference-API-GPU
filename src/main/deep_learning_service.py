@@ -1,7 +1,7 @@
 import os
+import re
 import json
 import uuid
-import re
 from inference.inference_engines_factory import InferenceEngineFactory
 from inference.exceptions import ModelNotFound, InvalidModelConfiguration, ModelNotLoaded, InferenceEngineNotFound, \
     InvalidInputData, ApplicationError
@@ -75,14 +75,14 @@ class DeepLearningService:
         for model in model_names:
             self.load_model(model)
 
-    async def run_model(self, model_name, input_data, draw_boxes, predict_batch):
+    async def run_model(self, model_name, input_data, draw, predict_batch):
         """
         Loads the model in case it was never loaded and calls the inference engine class to get a prediction.
         :param model_name: Model name
         :param input_data: Batch of images or a single image
-        :param draw_boxes: Boolean to specify if we need to draw the response on the input image
+        :param draw: Boolean to specify if we need to draw the response on the input image
         :param predict_batch: Boolean to specify if there is a batch of images in a request or not
-        :return: Model response in case draw_boxes was set to False, else an actual image
+        :return: Model response in case draw was set to False, else an actual image
         """
         if re.match(r'[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}', model_name,
                     flags=0):
@@ -92,18 +92,18 @@ class DeepLearningService:
         if self.model_loaded(model_name):
             try:
                 if predict_batch:
-                    return await self.models_dict[model_name].run_batch(input_data, draw_boxes, predict_batch)
+                    return await self.models_dict[model_name].run_batch(input_data, draw, predict_batch)
                 else:
-                    if not draw_boxes:
-                        return await self.models_dict[model_name].run(input_data, draw_boxes, predict_batch)
+                    if not draw:
+                        return await self.models_dict[model_name].infer(input_data, draw, predict_batch)
                     else:
-                        await self.models_dict[model_name].run(input_data, draw_boxes, predict_batch)
+                        await self.models_dict[model_name].infer(input_data, draw, predict_batch)
             except ApplicationError as e:
                 raise e
         else:
             try:
                 self.load_model(model_name)
-                return await self.run_model(model_name, input_data, draw_boxes, predict_batch)
+                return await self.run_model(model_name, input_data, draw, predict_batch)
             except ApplicationError as e:
                 raise e
 

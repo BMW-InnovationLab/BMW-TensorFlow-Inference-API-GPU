@@ -12,7 +12,7 @@ class AbstractError(ABC):
         """
         self.logger = logging.getLogger('logger')
         date = datetime.now().strftime('%Y-%m-%d')
-        file_path = 'logs/tensorflow_inference_engine_' + date + '.log'
+        file_path = 'logs/' + date + '.log'
         self.handler = logging.FileHandler(file_path)
         self.handler.setLevel(logging.INFO)
         self.handler.setFormatter(logging.Formatter("%(levelname)s;%(asctime)s;%(message)s"))

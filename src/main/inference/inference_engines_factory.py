@@ -27,6 +27,8 @@ class InferenceEngineFactory:
             # model instance
             return getattr(__import__(inference_engine_name), 'InferenceEngine')(path_to_model)
         except ApplicationError as e:
+            print(e)
             raise e
         except Exception as e:
+            print(e)
             raise InferenceEngineNotFound(inference_engine_name)

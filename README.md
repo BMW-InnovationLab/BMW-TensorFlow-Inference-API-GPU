@@ -1,4 +1,4 @@
-# Tensorflow GPU Inference API for Linux
+# Tensorflow GPU Inference API
 
 This is a repository for an object detection inference API using the Tensorflow framework.
 
@@ -61,7 +61,7 @@ sudo docker build --build-arg http_proxy='' --build-arg https_proxy='' -t tensor
 
 ## Run the docker container
 
-To run the API, go to the project's root directory and run the following:
+To run the API, go the to the API's directory and run the following:
 
 #### Using Linux based docker:
 
@@ -73,7 +73,7 @@ The <docker_host_port> can be any unique port of your choice.
 
 The API file will be run automatically, and the service will listen to http requests on the chosen port.
 
-NV_GPU defines on which GPU you want the API to run. If you want the API to run on multiple GPUs just enter multiple numbers separated by a comma: (NV_GPU=0,1 for example)
+NV_GPU defines on which GPU you want the API to run. If you want the API to run on multiple GPUs just enter multiple numbers seperated by a comma: (NV_GPU=0,1 for example)
 
 ## API Endpoints
 
@@ -136,33 +136,34 @@ Returns the specified model's configuration
 
 Performs inference on specified model and a list of images, and returns bounding boxes
 
+**P.S: Custom endpoints like /load, /detect, and /get_labels should be used in a chronological order. First you have to call /load, and then call /detect or /get_labels**
+
 ## Model structure
 
 The folder "models" contains subfolders of all the models to be loaded.
 Inside each subfolder there should be a:
 
-- pb file: contains the model weights
+- pb file (frozen_inference_graph.pb): contains the model weights
 
-- pbtxt file: contains model classes
+- pbtxt file (object-detection.pbtxt): contains model classes
 
 - Config.json (This is a json file containing information about the model)
 
   ```json
     {
+        "inference_engine_name": "tensorflow_detection",
         "confidence": 60,
         "predictions": 15,
         "number_of_classes": 2,
-        "inference_engine_name": "tensorflow_detection",
         "framework": "tensorflow",
         "type": "detection",
         "network": "inception"
     }
   ```
   P.S:
-  - "number_of_classes" value should be equal to your model's number of classes
-  - You can change "confidence" and "predictions" values while running the API
-  - The API will return bounding boxes with a confidence higher than the "confidence" value. A high "confidence" can show you only accurate predictions. "confidence" value should be between 0 and 100
-  - The "predictions" value specifies the maximum number of bounding boxes in the API response. It should be positive
+  - You can change confidence and predictions values while running the API
+  - The API will return bounding boxes with a confidence higher than the "confidence" value. A high "confidence" can show you only accurate predictions
+    - The "predictions" value specifies the maximum number of bounding boxes in the API response
 
 ## Benchmarking
 
@@ -231,10 +232,3 @@ Inside each subfolder there should be a:
 
 ## Acknowledgment
 
-[inmind.ai](https://inmind.ai)
-
-[robotron.de](https://robotron.de)
-
-Joe Sleiman, inmind.ai , Beirut, Lebanon
-
-Antoine Charbel, inmind.ai, Beirut, Lebanon

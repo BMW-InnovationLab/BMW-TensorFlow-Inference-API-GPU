@@ -1,23 +1,26 @@
 import sys
-from starlette.responses import FileResponse
-from models import ApiResponse
 from typing import List
-from fastapi import FastAPI, HTTPException, Form, File, UploadFile, Header, BackgroundTasks
+from models import ApiResponse
+from inference.errors import Error
+from starlette.responses import FileResponse
 from starlette.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
 from deep_learning_service import DeepLearningService
-from inference.exceptions import ModelNotFound, InvalidModelConfiguration, ApplicationError, ModelNotLoaded, InferenceEngineNotFound, InvalidInputData
-from inference.errors import Error
+from fastapi import FastAPI, Form, File, UploadFile, Header
+from inference.exceptions import ModelNotFound, InvalidModelConfiguration, ApplicationError, ModelNotLoaded, \
+	InferenceEngineNotFound, InvalidInputData
+
 
 sys.path.append('./inference')
 
 dl_service = DeepLearningService()
 error_logging = Error()
-app = FastAPI(version='3.1.0', title='BMW InnovationLab tensorflow gpu inference Automation',
-              description="<b>API for performing tensorflow gpu inference</b></br></br>"
-                          "<b>Contact the developers:</b></br>"
-                          "<b>Antoine Charbel: <a href='mailto:antoine.charbel@inmind.ai'>antoine.charbel@inmind.ai</a></b></br>"
-                          "<b>BMW Innovation Lab: <a href='mailto:innovation-lab@bmw.de'>innovation-lab@bmw.de</a></b>")
+app = FastAPI(version='1.0', title='BMW InnovationLab tensorflow gpu inference Automation',
+			  description="<b>API for performing tensorflow gpu inference</b></br></br>"
+						  "<b>Contact the developers:</b></br>"
+						  "<b>Antoine Charbel: <a href='mailto:antoine.charbel@inmind.ai'>antoine.charbel@inmind.ai</a></b></br>"
+						  "<b>BMW Innovation Lab: <a href='mailto:innovation-lab@bmw.de'>innovation-lab@bmw.de</a></b>")
+
 
 # app.mount("/public", StaticFiles(directory="/main/public"), name="public")
 
@@ -59,10 +62,10 @@ async def detect_custom(model: str = Form(...), image: UploadFile = File(...)):
 		error_logging.info('request successful;' + str(output))
 		return output
 	except ApplicationError as e:
-		error_logging.warning(model+';'+str(e))
+		error_logging.warning(model + ';' + str(e))
 		return ApiResponse(success=False, error=e)
 	except Exception as e:
-		error_logging.error(model+' '+str(e))
+		error_logging.error(model + ' ' + str(e))
 		return ApiResponse(success=False, error='unexpected server error')
 
 
@@ -109,17 +112,15 @@ async def run_model(model_name: str, input_data: UploadFile = File(...)):
 	:param input_data: An image file
 	:return: APIResponse containing the prediction's bounding boxes
 	"""
-	draw_boxes = False
-	predict_batch = False
 	try:
-		output = await dl_service.run_model(model_name, input_data, draw_boxes, predict_batch)
+		output = await dl_service.run_model(model_name, input_data, draw=False, predict_batch=False)
 		error_logging.info('request successful;' + str(output))
 		return ApiResponse(data=output)
 	except ApplicationError as e:
-		error_logging.warning(model_name+';'+str(e))
+		error_logging.warning(model_name + ';' + str(e))
 		return ApiResponse(success=False, error=e)
 	except Exception as e:
-		error_logging.error(model_name+' '+str(e))
+		error_logging.error(model_name + ' ' + str(e))
 		return ApiResponse(success=False, error='unexpected server error')
 
 
@@ -131,40 +132,36 @@ async def run_model_batch(model_name: str, input_data: List[UploadFile] = File(.
 	:param input_data: A batch of image files or a single image file
 	:return: APIResponse containing prediction(s) bounding boxes
 	"""
-	draw_boxes = False
-	predict_batch = True
 	try:
-		output = await dl_service.run_model(model_name, input_data, draw_boxes, predict_batch)
+		output = await dl_service.run_model(model_name, input_data, draw=False, predict_batch=True)
 		error_logging.info('request successful;' + str(output))
 		return ApiResponse(data=output)
 	except ApplicationError as e:
-		error_logging.warning(model_name+';'+str(e))
+		error_logging.warning(model_name + ';' + str(e))
 		return ApiResponse(success=False, error=e)
 	except Exception as e:
 		print(e)
-		error_logging.error(model_name+' '+str(e))
+		error_logging.error(model_name + ' ' + str(e))
 		return ApiResponse(success=False, error='unexpected server error')
 
 
 @app.post('/models/{model_name}/predict_image')
-async def run_model(model_name: str, input_data: UploadFile = File(...)):
+async def predict_image(model_name: str, input_data: UploadFile = File(...)):
 	"""
 	Draws bounding box(es) on image and returns it.
 	:param model_name: Model name
 	:param input_data: Image file
 	:return: Image file
 	"""
-	draw_boxes = True
-	predict_batch = False
 	try:
-		output = await dl_service.run_model(model_name, input_data, draw_boxes, predict_batch)
+		output = await dl_service.run_model(model_name, input_data, draw=True, predict_batch=False)
 		error_logging.info('request successful;' + str(output))
 		return FileResponse("/main/result.jpg", media_type="image/jpg")
 	except ApplicationError as e:
-		error_logging.warning(model_name+';'+str(e))
+		error_logging.warning(model_name + ';' + str(e))
 		return ApiResponse(success=False, error=e)
 	except Exception as e:
-		error_logging.error(model_name+' '+str(e))
+		error_logging.error(model_name + ' ' + str(e))
 		return ApiResponse(success=False, error='unexpected server error')
 
 
