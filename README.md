@@ -232,3 +232,10 @@ Inside each subfolder there should be a:
 
 ## Acknowledgment
 
+[inmind.ai](https://inmind.ai)
+
+[robotron.de](https://robotron.de)
+
+Joe Sleiman, inmind.ai , Beirut, Lebanon
+
+Antoine Charbel, inmind.ai, Beirut, Lebanon
