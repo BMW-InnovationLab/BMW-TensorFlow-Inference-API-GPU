@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  api:
+    environment:
+      - "NVIDIA_VISIBLE_DEVICES=0"
+    ports: 
+      - "4343:4343"
+    image: tensorflow_inference_api_gpu
+    volumes: 
+      - "/mnt/models:/models"
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
