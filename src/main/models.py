@@ -8,5 +8,5 @@ class ApiResponse:
         :param error: The error in case an exception was raised
         """
         self.data = data
-        self.error = error.get_message() if error is not None else ''
+        self.error = error.__str__() if error is not None else ''
         self.success = success
