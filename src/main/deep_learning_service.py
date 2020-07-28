@@ -17,7 +17,7 @@ class DeepLearningService:
         # dictionary to hold the model instances (model_name: string -> model_instance: AbstractInferenceEngine)
         self.models_dict = {}
         # read from json file and append to dict
-        file_name = 'model_hash.json'
+        file_name = '/models_hash/model_hash.json'
         file_exists = os.path.exists(file_name)
         if file_exists:
             try:
@@ -26,7 +26,7 @@ class DeepLearningService:
             except:
                 self.models_hash_dict = {}
         else:
-            with open('model_hash.json', 'w'):
+            with open('/models_hash/model_hash.json', 'w'):
                 self.models_hash_dict = {}
         self.labels_hash_dict = {}
         self.base_models_dir = '/models'
@@ -62,7 +62,7 @@ class DeepLearningService:
             if key not in models:
                 del self.models_hash_dict[key]
         # append to json file
-        with open('model_hash.json', "w") as fp:
+        with open('/models_hash/model_hash.json', "w") as fp:
             json.dump(self.models_hash_dict, fp)
         return self.models_hash_dict
 

@@ -66,7 +66,7 @@ To run the API, go the to the API's directory and run the following:
 #### Using Linux based docker:
 
 ```sh
-sudo NV_GPU=0 nvidia-docker run -itv $(pwd)/models:/models -p <docker_host_port>:4343 tensorflow_inference_api_gpu
+sudo NV_GPU=0 nvidia-docker run -itv $(pwd)/models:/models -v $(pwd)/models_hash:/models_hash -p <docker_host_port>:4343 tensorflow_inference_api_gpu
 ```
 
 The <docker_host_port> can be any unique port of your choice.
