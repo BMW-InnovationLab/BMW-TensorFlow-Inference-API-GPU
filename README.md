@@ -154,6 +154,10 @@ Returns the specified model's configuration
 
 Performs inference on specified model and a list of images, and returns bounding boxes
 
+#### /type (GET)
+
+Returns the type of the inference API
+
 **P.S: Custom endpoints like /load, /detect, and /get_labels should be used in a chronological order. First you have to call /load, and then call /detect or /get_labels**
 
 ## Model structure
