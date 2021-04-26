@@ -77,8 +77,4 @@ def ocr_service(image):
     response["box"] = bounding_box
     response["score"] = valid_df["conf"].mean()/100.0
 
-    #draw = ImageDraw.Draw(image)
-    #draw.rectangle((coordinates["left"],coordinates["top"],coordinates["right"],coordinates["bottom"]), outline="black")
-    #image.save("/home/anisismail/BMW-TensorFlow-Inference-API-GPU/src/main/mod.jpeg", "JPEG")
-
     return [response]
