@@ -6,7 +6,7 @@ This repo is based on [Tensorflow Object Detection API](https://github.com/tenso
 
 The Tensorflow version used is 1.13.1. The inference REST API works on GPU. It's only supported on Linux Operating systems.
 
-Models trained using our training tensorflow repository can be deployed in this API. Several object detection models can be loaded and used at the same time. This repo also offer optical character recognition services to extract textboxes from images.
+Models trained using our training tensorflow repository can be deployed in this API. Several object detection models can be loaded and used at the same time. This repo also offers optical character recognition services to extract textboxes from images.
 
 This repo can be deployed using either **docker** or **docker swarm**.
 
@@ -155,13 +155,13 @@ Returns the specified model's configuration
 
 Performs inference on specified model and a list of images, and returns bounding boxes
 
-**P.S: Custom endpoints like /load, /detect, and /get_labels should be used in a chronological order. First you have to call /load, and then call /detect or /get_labels**
-
 #### /models/{model_name}/one_shot_ocr (POST)
 
 Takes an image and returns extracted text details. In first place a detection model will be used for cropping interesting areas in the uploaded image. Then, these areas will be passed to the OCR-Service for text extraction.
 
 #### /models/{model_name}/ocr (POST)
+
+![predict image](./docs/5.gif)
 
 Takes an image and returns extracted text details without using an object detection model
 
