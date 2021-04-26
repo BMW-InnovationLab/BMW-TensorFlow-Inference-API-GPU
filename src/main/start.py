@@ -238,7 +238,7 @@ async def optical_character_recognition(
         ..., description="Image to perform optical character recognition based on layout inference:"),
 ):
     """
-        Takes an image and returns extracted layout informations.
+        Takes an image and returns extracted text informations.
 
         The image is passed to the OCR-Service for text extraction
 
