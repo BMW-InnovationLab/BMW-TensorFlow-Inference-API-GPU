@@ -2,7 +2,6 @@ import pytesseract
 import unicodedata
 import re
 import numpy as np
-#from PIL import Image, ImageFont, ImageDraw, ImageEnhance
 
 
 # Define class variables
@@ -52,8 +51,6 @@ def ocr_service(image):
     # Get data including boxes, confidences, line and page numbers
     df = pytesseract.image_to_data(image, output_type='data.frame')
     valid_df = df[df["conf"] > 0]
-    if len(np.unique(valid_df["block_num"])) > 1:
-        return None
 
     # process text
     extracted_text = " ".join(valid_df["text"].values)
