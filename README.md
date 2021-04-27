@@ -161,9 +161,9 @@ Takes an image and returns extracted text details. In first place a detection mo
 
 #### /models/{model_name}/ocr (POST)
 
-![predict image](./docs/5.gif)
-
 Takes an image and returns extracted text details without using an object detection model
+
+![predict image](./docs/5.gif)
 
 **P.S: Custom endpoints like /load, /detect, /get_labels and /one_shot_ocr should be used in a chronological order. First you have to call /load, and then call /detect, /get_labels or /one_shot_ocr**
 
@@ -272,4 +272,4 @@ Joe Sleiman, inmind.ai , Beirut, Lebanon
 
 Antoine Charbel, inmind.ai, Beirut, Lebanon
 
-[Anis Ismail](https://www.linkedin.com/in/anisdismail), Lebanese American University , Beirut, Lebanon
+[Anis Ismail](https://www.linkedin.com/in/anisdismail), Lebanese American University, Beirut, Lebanon
