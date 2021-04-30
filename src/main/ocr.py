@@ -2,6 +2,7 @@ import pytesseract
 import unicodedata
 import re
 import numpy as np
+#from PIL import Image, ImageFont, ImageDraw, ImageEnhance
 
 
 # Define class variables
@@ -21,8 +22,11 @@ def one_shot_ocr_service(image, output):
         cropped = image.crop((float(coordinates["left"]), float(
             coordinates["top"]), float(coordinates["right"]), float(coordinates["bottom"])))
 
+        # convert image to grayscale for better accuracy 
+        processed_img=cropped.convert('L')
+        
         # extract text with positive confidence from cropped image
-        df = pytesseract.image_to_data(cropped, output_type='data.frame')
+        df = pytesseract.image_to_data(processed_img, output_type='data.frame')
         valid_df = df[df["conf"] > 0]
         extracted_text = " ".join(valid_df["text"].values)
 
@@ -47,9 +51,11 @@ def one_shot_ocr_service(image, output):
 
 # This method will take an image and return the extracted text from the image
 def ocr_service(image):
+    # convert image to grayscale for better accuracy 
+    processed_img=image.convert('L')
 
     # Get data including boxes, confidences, line and page numbers
-    df = pytesseract.image_to_data(image, output_type='data.frame')
+    df = pytesseract.image_to_data(processed_img, output_type='data.frame')
     valid_df = df[df["conf"] > 0]
 
     # process text
