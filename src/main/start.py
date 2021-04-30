@@ -194,8 +194,11 @@ async def list_model_config(model_name: str):
 
 
 @app.post('/models/{model_name}/one_shot_ocr')
-async def one_shot_ocr(model_name: str, image: UploadFile = File(
-        ..., description="Image to perform optical character recognition based on layout inference:")):
+async def one_shot_ocr(
+    model_name: str,
+    image: UploadFile = File(
+        ..., description="Image to perform optical character recognition based on layout inference:")
+):
     """
         Takes an image and returns extracted text details.
 
@@ -231,9 +234,9 @@ async def one_shot_ocr(model_name: str, image: UploadFile = File(
     return response
 
 
-@app.post('/ocr')
+@app.post('/models/{model_name}/ocr')
 async def optical_character_recognition(
-
+    model_name: str,
     image: UploadFile = File(
         ..., description="Image to perform optical character recognition based on layout inference:"),
 ):
