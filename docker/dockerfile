@@ -27,7 +27,8 @@ RUN apt-get update && apt-get install -y \
   cuda-cufft-10-0 \
   cuda-curand-10-0 \
   cuda-cusolver-10-0 \
-  cuda-cusparse-10-0
+  cuda-cusparse-10-0 \
+  tesseract-ocr
 
 RUN curl -O https://bootstrap.pypa.io/get-pip.py && \
     python3 get-pip.py && \

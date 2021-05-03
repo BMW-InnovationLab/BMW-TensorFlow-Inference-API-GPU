@@ -7,3 +7,7 @@ pytest
 python-multipart
 tensorflow-gpu==1.13.1
 uvicorn
+pytesseract
+pytz
+pandas 
+numpy

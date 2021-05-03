@@ -6,7 +6,7 @@ This repo is based on [Tensorflow Object Detection API](https://github.com/tenso
 
 The Tensorflow version used is 1.13.1. The inference REST API works on GPU. It's only supported on Linux Operating systems.
 
-Models trained using our training tensorflow repository can be deployed in this API. Several object detection models can be loaded and used at the same time.
+Models trained using our training tensorflow repository can be deployed in this API. Several object detection models can be loaded and used at the same time. This repo also offers optical character recognition services to extract textboxes from images.
 
 This repo can be deployed using either **docker** or **docker swarm**.
 
@@ -100,6 +100,7 @@ To see all available endpoints, open your favorite browser and navigate to:
 ```
 http://<machine_IP>:<docker_host_port>/docs
 ```
+
 The 'predict_batch' endpoint is not shown on swagger. The list of files input is not yet supported.
 
 **P.S: If you are using custom endpoints like /load, /detect, and /get_labels, you should always use the /load endpoint first and then use /detect or /get_labels**
@@ -154,7 +155,17 @@ Returns the specified model's configuration
 
 Performs inference on specified model and a list of images, and returns bounding boxes
 
-**P.S: Custom endpoints like /load, /detect, and /get_labels should be used in a chronological order. First you have to call /load, and then call /detect or /get_labels**
+#### /models/{model_name}/one_shot_ocr (POST)
+
+Takes an image and returns extracted text details. In first place a detection model will be used for cropping interesting areas in the uploaded image. Then, these areas will be passed to the OCR-Service for text extraction.
+
+#### /models/{model_name}/ocr (POST)
+
+Takes an image and returns extracted text details without using an object detection model
+
+![predict image](./docs/5.gif)
+
+**P.S: Custom endpoints like /load, /detect, /get_labels and /one_shot_ocr should be used in a chronological order. First you have to call /load, and then call /detect, /get_labels or /one_shot_ocr**
 
 ## Model structure
 
@@ -178,7 +189,9 @@ Inside each subfolder there should be a:
         "network": "inception"
     }
   ```
+
   P.S:
+
   - You can change confidence and predictions values while running the API
   - The API will return bounding boxes with a confidence higher than the "confidence" value. A high "confidence" can show you only accurate predictions
     - The "predictions" value specifies the maximum number of bounding boxes in the API response
@@ -248,6 +261,7 @@ Inside each subfolder there should be a:
     </tbody>
 </table>
 
+
 ## Acknowledgment
 
 [inmind.ai](https://inmind.ai)
@@ -257,3 +271,5 @@ Inside each subfolder there should be a:
 Joe Sleiman, inmind.ai , Beirut, Lebanon
 
 Antoine Charbel, inmind.ai, Beirut, Lebanon
+
+[Anis Ismail](https://www.linkedin.com/in/anisdismail), Lebanese American University, Beirut, Lebanon
