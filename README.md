@@ -272,4 +272,4 @@ Joe Sleiman, inmind.ai , Beirut, Lebanon
 
 Antoine Charbel, inmind.ai, Beirut, Lebanon
 
-[Anis Ismail](https://www.linkedin.com/in/anisdismail), Lebanese American University, Beirut, Lebanon
+[Anis Ismail](https://www.linkedin.com/in/anisdismail), Beirut, Lebanon
