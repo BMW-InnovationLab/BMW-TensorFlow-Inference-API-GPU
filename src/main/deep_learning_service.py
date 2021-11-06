@@ -93,11 +93,10 @@ class DeepLearningService:
             try:
                 if predict_batch:
                     return await self.models_dict[model_name].run_batch(input_data, draw, predict_batch)
+                if not draw:
+                    return await self.models_dict[model_name].infer(input_data, draw, predict_batch)
                 else:
-                    if not draw:
-                        return await self.models_dict[model_name].infer(input_data, draw, predict_batch)
-                    else:
-                        await self.models_dict[model_name].infer(input_data, draw, predict_batch)
+                    await self.models_dict[model_name].infer(input_data, draw, predict_batch)
             except ApplicationError as e:
                 raise e
         else:
@@ -147,9 +146,11 @@ class DeepLearningService:
                     model_name = key
         models = self.list_models()
         if model_name not in self.labels_hash_dict:
-            model_dict = {}
-            for label in self.models_dict[model_name].labels:
-                model_dict[label] = str(uuid.uuid4())
+            model_dict = {
+                label: str(uuid.uuid4())
+                for label in self.models_dict[model_name].labels
+            }
+
             self.labels_hash_dict[model_name] = model_dict
         for key in list(self.labels_hash_dict):
             if key not in models:

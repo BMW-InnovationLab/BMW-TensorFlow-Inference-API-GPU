@@ -258,9 +258,7 @@ def draw_bounding_boxes_on_image(image,
   if len(boxes_shape) != 2 or boxes_shape[1] != 4:
     raise ValueError('Input must be of size [N, 4]')
   for i in range(boxes_shape[0]):
-    display_str_list = ()
-    if display_str_list_list:
-      display_str_list = display_str_list_list[i]
+    display_str_list = display_str_list_list[i] if display_str_list_list else ()
     draw_bounding_box_on_image(image, boxes[i, 0], boxes[i, 1], boxes[i, 2],
                                boxes[i, 3], color, thickness, display_str_list)
 
@@ -497,8 +495,8 @@ def draw_keypoints_on_image(image,
   keypoints_x = [k[1] for k in keypoints]
   keypoints_y = [k[0] for k in keypoints]
   if use_normalized_coordinates:
-    keypoints_x = tuple([im_width * x for x in keypoints_x])
-    keypoints_y = tuple([im_height * y for y in keypoints_y])
+    keypoints_x = tuple(im_width * x for x in keypoints_x)
+    keypoints_y = tuple(im_height * y for y in keypoints_y)
   for keypoint_x, keypoint_y in zip(keypoints_x, keypoints_y):
     draw.ellipse([(keypoint_x - radius, keypoint_y - radius),
                   (keypoint_x + radius, keypoint_y + radius)],
@@ -617,13 +615,12 @@ def visualize_boxes_and_labels_on_image_array(
         box_to_color_map[box] = groundtruth_box_visualization_color
       else:
         display_str = ''
-        if not skip_labels:
-          if not agnostic_mode:
-            if classes[i] in category_index.keys():
-              class_name = category_index[classes[i]]['name']
-            else:
-              class_name = 'N/A'
-            display_str = str(class_name)
+        if not skip_labels and not agnostic_mode:
+          if classes[i] in category_index.keys():
+            class_name = category_index[classes[i]]['name']
+          else:
+            class_name = 'N/A'
+          display_str = str(class_name)
         if not skip_scores:
           if not display_str:
             display_str = '{}%'.format(int(100*scores[i]))
