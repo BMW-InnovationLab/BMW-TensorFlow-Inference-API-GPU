@@ -1,18 +1,26 @@
-FROM nvidia/cuda:10.0-base-ubuntu18.04
+FROM nvidia/cuda:10.0-cudnn7-devel-ubuntu18.04
 LABEL maintainer "antoine.charbel@inmind.ai"
 
-# The commands below install Cuda and libcudnn in order for the code to run on the GPU
-ENV CUDNN_VERSION 7.4.2.24
-LABEL com.nvidia.cudnn.version="${CUDNN_VERSION}"
+ARG DEBIAN_FRONTEND=noninteractive
+
 
 COPY docker/requirements.txt .
 
 COPY src/main /main
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-  libcudnn7=$CUDNN_VERSION-1+cuda10.0 && \
-  apt-mark hold libcudnn7 && \
-  rm -rf /var/lib/apt/lists/*
+# Fix Nvidia/Cuda repository key rotation
+RUN sed -i '/developer\.download\.nvidia\.com\/compute\/cuda\/repos/d' /etc/apt/sources.list.d/*
+RUN sed -i '/developer\.download\.nvidia\.com\/compute\/machine-learning\/repos/d' /etc/apt/sources.list.d/*  
+RUN apt-key del 7fa2af80 &&\
+    apt-get update && \
+    apt-get  install -y wget && \
+    wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-keyring_1.0-1_all.deb && \
+    dpkg -i cuda-keyring_1.0-1_all.deb
+
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#   libcudnn7=$CUDNN_VERSION-1+cuda10.0 && \
+#   apt-mark hold libcudnn7 && \
+#   rm -rf /var/lib/apt/lists/*
 
 # Install python dependencies
 RUN apt-get update && apt-get install -y \
@@ -30,10 +38,7 @@ RUN apt-get update && apt-get install -y \
   cuda-cusparse-10-0 \
   tesseract-ocr
 
-RUN curl -O https://bootstrap.pypa.io/get-pip.py && \
-    python3 get-pip.py && \
-    rm get-pip.py
-
+RUN python3 -m pip install -U pip
 RUN pip3 install -r requirements.txt
 
 # Set the locale (required for uvicorn)
