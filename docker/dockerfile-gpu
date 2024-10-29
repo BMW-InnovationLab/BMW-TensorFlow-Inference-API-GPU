@@ -1,0 +1,41 @@
+FROM tensorflow/tensorflow:2.5.0-gpu
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+# Fix Nvidia/Cuda repository key rotation
+RUN sed -i '/developer\.download\.nvidia\.com\/compute\/cuda\/repos/d' /etc/apt/sources.list.d/*
+RUN sed -i '/developer\.download\.nvidia\.com\/compute\/machine-learning\/repos/d' /etc/apt/sources.list.d/*  
+RUN apt-key del 7fa2af80 &&\
+    apt-get update && \
+    apt-get  install -y wget && \
+    wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-keyring_1.0-1_all.deb && \
+    dpkg -i cuda-keyring_1.0-1_all.deb
+    
+COPY docker/requirements.txt .
+
+COPY src/main /main
+
+
+# Install python dependencies
+RUN apt-get update && apt-get install -y \
+  locales \
+  python3 \
+  python3-pip \
+  pkg-config\
+  curl 
+
+RUN python3 -m pip install -U pip
+RUN pip3 install -r requirements.txt
+
+# Set the locale (required for uvicorn)
+RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
+  dpkg-reconfigure --frontend=noninteractive locales && \
+  update-locale LANG=en_US.UTF-8
+ENV LANG en_US.UTF-8 
+
+WORKDIR /main
+
+CMD ["uvicorn", "start:app", "--host", "0.0.0.0", "--port", "4343"]
+
+
+
