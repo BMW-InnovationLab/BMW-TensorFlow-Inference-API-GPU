@@ -18,7 +18,7 @@
 Example box operations that are supported:
   * areas: compute bounding box areas
   * iou: pairwise intersection-over-union scores
-  * sq_dist: pairwise distances between bounding boxes
+  * sq_dist: pairwise distances between bounding botensorflowxes
 
 Whenever box_list_ops functions output a BoxList, the fields of the incoming
 BoxList are retained unless documented otherwise.
